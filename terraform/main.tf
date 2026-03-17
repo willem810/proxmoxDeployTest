@@ -1,24 +1,24 @@
+# No backend block needed for local state
+terraform {
+  required_providers {
+    docker = {
+      source  = "kreuzwerker/docker"
+      version = "~> 3.0"
+    }
+  }
+}
+
 provider "docker" {
-  host = "tcp://<APP_HOST_IP>:2375" # Enable Docker TCP socket or use SSH
+  # Connect to your Docker LXC via SSH
+  host = "ssh://root@<DOCKER_LXC_IP>:22"
 }
 
-resource "docker_network" "private_network" {
-  name = "dotnet_app_net"
-}
-
-resource "docker_container" "db" {
-  name  = "postgres_db"
-  image = "postgres:latest"
-  networks_advanced { name = docker_network.private_network.name }
-  env   = ["POSTGRES_PASSWORD=secret"]
-}
-
-resource "docker_container" "backend" {
+# Example resource
+resource "docker_container" "dotnet_app" {
   name  = "dotnet_backend"
-  image = "my-registry.com/dotnet-app:latest"
-  networks_advanced { name = docker_network.private_network.name }
+  image = "mcr.microsoft.com/dotnet/aspnet:8.0"
   ports {
-    internal = 5000
+    internal = 80
     external = 5000
   }
 }
