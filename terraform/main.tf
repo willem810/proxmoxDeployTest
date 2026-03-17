@@ -10,7 +10,7 @@ terraform {
 
 provider "docker" {
   # Connect to your Docker LXC via SSH
-  host = "ssh://root@<DOCKER_LXC_IP>:22"
+  host = "ssh://root@192.168.2.28:22"
 }
 
 # Example resource
