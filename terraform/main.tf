@@ -1,5 +1,8 @@
 # No backend block needed for local state
 terraform {
+  backend "local" {
+    path = "/home/github-runner/opentofu-states/proxmoxdeploytest.tfstate"
+  }
   required_providers {
     docker = {
       source  = "kreuzwerker/docker"
