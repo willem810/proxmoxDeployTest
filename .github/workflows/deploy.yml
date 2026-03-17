@@ -1,1 +1,29 @@
-hello
+name: "OpenTofu Deployment"
+
+on:
+  push:
+    branches:
+      - main  # Triggers deployment when you push to the main branch
+  workflow_dispatch: # Allows you to trigger it manually from the UI
+
+jobs:
+  opentofu:
+    name: "Tofu Apply"
+    runs-on: self-hosted  # This tells GitHub to use your LXC runner
+    
+    defaults:
+      run:
+        working-directory: ./terraform # Set this to wherever your .tf files are
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: OpenTofu Init
+        run: tofu init
+
+      - name: OpenTofu Plan
+        run: tofu plan -out=main.tfplan
+
+      - name: OpenTofu Apply
+        run: tofu apply -auto-approve main.tfplan
